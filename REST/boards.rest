@@ -1,0 +1,146 @@
+# https://docs.microsoft.com/en-us/rest/api/azure/devops/?view=azure-devops-rest-6.0
+
+# https://docs.microsoft.com/en-us/rest/api/azure/devops/wit/work%20items
+
+@organization=matthewburleigh
+@project=AZ_CLI-REST_API-PowerShell
+@authHeader=Authorization: Basic matt.burleigh@outlook.com:{{pat}}
+
+### ===== WORK ITEMS =====
+
+### get a specific work item (https://docs.microsoft.com/en-us/rest/api/azure/devops/wit/work%20items/get%20work%20item?view=azure-devops-rest-6.0)
+@id=1155
+https://dev.azure.com/{{organization}}/{{project}}/_apis/wit/workitems/{{id}}?api-version=6.0
+{{authHeader}}
+
+### Get Field descriptions for work item type (https://docs.microsoft.com/en-us/rest/api/azure/devops/wit/Work%20Item%20Types%20Field/List?view=azure-devops-rest-6.0)
+//https://dev.azure.com/{{organization}}/{{project}}/_apis/wit/workitemtypes/Bug/fields?api-version=6.0
+https://dev.azure.com/{{organization}}/{{project}}/_apis/wit/workitemtypes/Task/fields?api-version=6.0
+{{authHeader}}
+
+### get the possible values for Iteration Path
+https://dev.azure.com/{{organization}}/_apis/wit/fields/System.IterationPath
+{{authHeader}}
+### get the possible values for State
+https://dev.azure.com/{{organization}}/_apis/wit/fields/System.State
+{{authHeader}}
+
+### list of work item revisions (lists multiple work items)
+https://dev.azure.com/{{organization}}/{{project}}/_apis/wit/reporting/workitemrevisions?api-version=6.0
+content-type: application/json
+{{authHeader}}
+
+### work item revision comments
+https://dev.azure.com/{{organization}}/{{project}}/_apis/wit/workItems/{{id}}/comments?api-version=6.0-preview
+content-type: application/json
+{{authHeader}}
+###
+
+### get a list of work items (https://docs.microsoft.com/en-us/rest/api/azure/devops/wit/work%20items/list?view=azure-devops-rest-6.0)
+POST https://dev.azure.com/{{organization}}/{{project}}/_apis/wit/workitemsbatch?api-version=6.0
+Content-Type: application/json
+{{authHeader}}
+
+{
+  "ids": [
+    1155,
+    1156
+  ],
+  "fields": [
+    "System.Id",
+    "System.Title",
+    "System.WorkItemType",
+    "Microsoft.VSTS.Scheduling.RemainingWork"
+  ]
+}
+
+### create a bug
+POST https://dev.azure.com/{{organization}}/{{project}}/_apis/wit/workitems/$Bug?api-version=6.0
+content-type: application/json-patch+json
+{{authHeader}}
+
+[
+  {
+    "op": "add",
+    "path": "/fields/System.Title",
+    "value": "BaltoMSDN bug"
+  },
+  {
+    "op": "add",
+    "path": "/fields/Microsoft.VSTS.Common.Priority",
+    "value": "3"
+  },
+  {
+    "op": "add",
+    "path": "/relations/-",
+    "value": {
+      "rel": "System.LinkTypes.Related",
+      "url": "https://dev.azure.com/{{organization}}/_apis/wit/workItems/1157",
+      "attributes": {
+        "comment": "Making a new link for the dependency"
+      }
+    }
+  },
+  {
+    "op": "add",
+    "path": "/fields/Microsoft.VSTS.TCM.SystemInfo",
+    "value": "<div>system info xxx</div><div><br></div>"
+  },
+  {
+    "op": "add",
+    "path": "/fields/Microsoft.VSTS.TCM.ReproSteps",
+    "value": "<div>repro steps yyy</div><div><br></div>"
+  }
+]
+
+### create a task
+POST https://dev.azure.com/{{organization}}/{{project}}/_apis/wit/workitems/$Task?api-version=6.0
+content-type: application/json-patch+json
+{{authHeader}}
+
+[
+  {
+    "op": "add",
+    "path": "/fields/System.Title",
+    "value": "BaltoMSDN task"
+  },
+  {
+    "op": "add",
+    "path": "/fields/Microsoft.VSTS.Common.Priority",
+    "value": "3"
+  },
+  {
+    "op": "add",
+    "path": "/relations/-",
+    "value": {
+      "rel": "System.LinkTypes.Related",
+      "url": "https://dev.azure.com/{{organization}}/_apis/wit/workItems/1157",
+      "attributes": {
+        "comment": "Making a new link for the dependency"
+      }
+    }
+  },
+  {
+    "op": "add",
+    "path": "/fields/Microsoft.VSTS.TCM.SystemInfo",
+    "value": "<div>system info xxx</div><div><br></div>"
+  },
+  {
+    "op": "add",
+    "path": "/fields/Microsoft.VSTS.TCM.ReproSteps",
+    "value": "<div>repro steps yyy</div><div><br></div>"
+  }
+]
+
+### edit existing workitem
+PATCH https://dev.azure.com/{{organization}}/{{project}}/_apis/wit/workitems/1161?api-version=6.0
+content-type: application/json-patch+json
+{{authHeader}}
+
+[
+  {
+    "op": "replace",
+    "path": "/fields/System.Title",
+    "value": "Updated"
+  }
+]

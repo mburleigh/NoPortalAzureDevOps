@@ -1,0 +1,50 @@
+#https://docs.microsoft.com/en-us/cli/azure/ext/azure-devops/repos/pr/work-item?view=azure-cli-latest#ext-azure-devops-az-repos-pr-work-item-list
+#https://dev.azure.com/matthewburleigh/PANDORA%20B2B%20Cloud/_git/Pandora.Cloud.Web/pullrequest/4281?_a=overview
+
+# list all PRs in team project
+az repos pr list --org https://dev.azure.com/matthewburleigh --project "AZ_CLI-REST_API-PowerShell"
+
+az repos pr list --org https://dev.azure.com/matthewburleigh -p "AZ_CLI-REST_API-PowerShell" `
+  --query "[].{Id:pullRequestId,By:createdBy.displayName,Repo:repository.name,Source:sourceRefName,Target:targetRefName,Title:title}" `
+  -o table
+
+az repos pr list --org https://dev.azure.com/matthewburleigh -p "AZ_CLI-REST_API-PowerShell" `
+  --query "[].{Id:pullRequestId,By:createdBy.displayName,Repo:repository.name,Source:sourceRefName,Target:targetRefName,Title:title}" `
+  -o table | clip
+
+# list work items for PR (id is PR id)
+az repos pr work-item list --org https://dev.azure.com/matthewburleigh --id 16
+
+az repos pr work-item list --org https://dev.azure.com/matthewburleigh --id 16 `
+  --query "[].id" -o tsv
+
+az repos pr work-item list --org https://dev.azure.com/matthewburleigh --id 16 `
+  --query "[].{Fields:fields}"
+
+az repos pr work-item list --org https://dev.azure.com/matthewburleigh --id 16 `
+  --query "[].{Fields:fields.\"System.WorkItemType\"}"
+
+az repos pr work-item list --org https://dev.azure.com/matthewburleigh --id 16 `
+  --query "[].{Id:id,Type:fields.\"System.WorkItemType\",Iteration:fields.\"System.IterationPath\", `
+  Title:fields.\"System.Title\"}" -o table
+
+# sorting by work item type
+az repos pr work-item list --org https://dev.azure.com/matthewburleigh --id 16 `
+  --query "sort_by([], &fields.\"System.WorkItemType\")[].{Id:id,Type:fields.\"System.WorkItemType\", `
+  Iteration:fields.\"System.IterationPath\",Title:fields.\"System.Title\"}" -o table
+
+
+az repos pr list --org https://dev.azure.com/matthewburleigh -p "AZ_CLI-REST_API-PowerShell" `
+  --query "[].{Id:pullRequestId,By:createdBy.displayName,Repo:repository.name,Source:sourceRefName, `
+  Target:targetRefName,Internal:reviewers[?contains(displayName, 'Internal')].vote `
+  | [0],External:reviewers[?contains(displayName, 'External')].vote | [0],Title:title, `
+  URL:join('', ['https://dev.azure.com/matthewburleigh/AZ_CLI-REST_API-PowerShell/_git/', `
+  repository.name, '/pullrequest/', to_string(pullRequestId), '?_a=overview'])}"
+
+az repos pr list --org https://dev.azure.com/matthewburleigh -p "AZ_CLI-REST_API-PowerShell" `
+  --query "[].{Id:pullRequestId,By:createdBy.displayName,Repo:repository.name,Source:sourceRefName `
+  ,Target:targetRefName,Internal:reviewers[?contains(displayName, 'Internal')].vote `
+  | [0],External:reviewers[?contains(displayName, 'External')].vote | [0],Title:title, `
+  URL:join('', ['https://dev.azure.com/matthewburleigh/AZ_CLI-REST_API-PowerShell/_git/', `
+  repository.name, '/pullrequest/', to_string(pullRequestId), '?_a=overview'])}" -o table
+

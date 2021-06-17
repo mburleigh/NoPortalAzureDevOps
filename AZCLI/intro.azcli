@@ -1,0 +1,39 @@
+az --help
+az version
+
+az extension list -h
+az extension list-available --output table
+az extension list --output table
+
+az extension update --name azure-devops
+
+az find "devops"
+
+az login
+
+az self-test
+
+# list Azure subscriptions
+az account list
+# JMESPath queries (https://jmespath.org/)
+az account list --query "[].{Subscription_ID:id,Tenant_ID:tenantId,Name:name}" `
+  --output table
+
+az account list --query "[].{Subscription_ID:id,Tenant_ID:tenantId,Name:name}" `
+  -o table | clip
+
+#The Azure CLI uses JSON as its default output format, but offers other formats.
+#Use the --output (--out or -o) parameter to format CLI output. The argument values and types of output are:
+#OUTPUT FORMATS FOR AZURE CLI COMMANDS
+#--output	Description
+#json	    JSON string. This setting is the default
+#jsonc	    Colorized JSON
+#yaml	    YAML, a machine-readable alternative to JSON
+#table	    ASCII table with keys as column headings
+#tsv	    Tab-separated values, with no keys
+#none	    No output other than errors and warnings
+
+az devops user list --org https://dev.azure.com/matthewburleigh
+
+az devops user show --org https://dev.azure.com/matthewburleigh `
+  --user matt.burleigh@outlook.com

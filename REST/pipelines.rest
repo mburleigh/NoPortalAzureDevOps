@@ -1,0 +1,70 @@
+@organization=matthewburleigh
+@project=AZ_CLI-REST_API-PowerShell
+@authHeader=Authorization: Basic matt.burleigh@outlook.com:{{pat}}
+
+
+### ===== BUILDS =====
+
+### List Builds (https://docs.microsoft.com/en-us/rest/api/azure/devops/build/builds/list?view=azure-devops-rest-6.0)
+https://dev.azure.com/{{organization}}/{{project}}/_apis/build/builds?api-version=6.0
+content-type: application/json
+{{authHeader}}
+###
+
+https://dev.azure.com/{{organization}}/{{project}}/_apis/build/builds?properties=buildNumber&api-version=6.0  // ????
+content-type: application/json
+{{authHeader}}
+###
+
+@buildId=135
+
+### Get Build Logs (https://docs.microsoft.com/en-us/rest/api/azure/devops/build/builds/get%20build%20logs?view=azure-devops-rest-6.0)
+### ==> 6 has command line output
+https://dev.azure.com/{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/logs?api-version=6.0
+Content-Type: application/application/json
+{{authHeader}}
+
+### Get Build Changes (https://docs.microsoft.com/en-us/rest/api/azure/devops/build/builds/get%20build%20changes?view=azure-devops-rest-6.0)
+https://dev.azure.com/{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/changes?api-version=6.0
+content-type: application/json
+{{authHeader}}
+
+### Get Build Work Item Refs (https://docs.microsoft.com/en-us/rest/api/azure/devops/build/builds/get%20build%20work%20items%20refs?view=azure-devops-rest-6.0)
+https://dev.azure.com/{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/workitems?api-version=6.0
+content-type: application/json
+{{authHeader}}
+
+### Get Build Work Item Refs from Commits (https://docs.microsoft.com/en-us/rest/api/azure/devops/build/builds/get%20build%20work%20items%20refs%20from%20commits?view=azure-devops-rest-6.0)
+POST https://dev.azure.com/{{organization}}/{{project}}/_apis/build/builds/{{buildId}}/workitems?api-version=6.0
+content-type: application/json
+{{authHeader}}
+
+### Queue a Build (https://docs.microsoft.com/en-us/rest/api/azure/devops/build/builds/queue?view=azure-devops-rest-5.0)
+POST https://dev.azure.com/{{organization}}/{{project}}/_apis/build/builds?api-version=6.0
+content-type: application/json
+{{authHeader}}
+
+{
+    "definition": {
+        "id": "17"
+    },
+    "sourceBranch": "refs/heads/main"
+}
+
+
+### ===== RELEASES =====
+
+# list release definitions (https://docs.microsoft.com/en-us/rest/api/azure/devops/release/definitions/list?view=azure-devops-rest-6.0)
+https://vsrm.dev.azure.com/{{organization}}/{{project}}/_apis/release/definitions?api-version=6.0
+{{authHeader}}
+
+# get list of releases
+https://vsrm.dev.azure.com/{{organization}}/{{project}}/_apis/release/releases?api-version=6.0
+{{authHeader}}
+###
+
+@releaseId=2
+# get details for a specific release
+https://vsrm.dev.azure.com/{{organization}}/{{project}}/_apis/release/releases/{{releaseId}}?api-version=6.0
+{{authHeader}}
+###

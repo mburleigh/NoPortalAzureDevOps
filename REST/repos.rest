@@ -1,0 +1,30 @@
+@organization=matthewburleigh
+@project=AZ_CLI-REST_API-PowerShell
+@authHeader=Authorization: Basic matt.burleigh@outlook.com:{{pat}}
+@apiRootUrl=https://dev.azure.com/{{organization}}/{{project}}/_apis
+@apiVersion=api-version=6.0-preview.1
+
+
+### =====REPOSITORIES =====
+
+### list repositories
+https://dev.azure.com/{{organization}}/{{project}}/_apis/git/repositories?api-version=6.0
+{{authHeader}}
+
+### get commit by commit id
+@commitId=d35d4f2f92dc0b3d5b43e6d873f483e8ed3a572c
+https://dev.azure.com/{{organization}}/{{project}}/_apis/git/repositories/Examples/commits/{{commitId}}?api-version=6.0
+{{authHeader}}
+
+### list pull requests (https://docs.microsoft.com/en-us/rest/api/azure/devops/git/pull%20requests/get%20pull%20requests?view=azure-devops-rest-6.0)
+@repositoryId=Examples
+https://dev.azure.com/{{organization}}/{{project}}/_apis/git/repositories/{{repositoryId}}/pullrequests?api-version=6.0
+{{authHeader}}
+
+
+### ===== PULL REQUESTS =====
+
+https://dev.azure.com/{{organization}}/{{project}}/_apis/sourceProviders/TfsGit/pullrequests/16?repositoryId={{repositoryId}}&api-version=6.0-preview.1
+{{authHeader}}
+
+###

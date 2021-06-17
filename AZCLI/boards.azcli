@@ -1,0 +1,31 @@
+# https://docs.microsoft.com/en-us/cli/azure/boards?view=azure-cli-latest
+
+az devops -h
+
+
+# some options to get a work item
+az boards work-item show --organization https://dev.azure.com/matthewburleigh --id 1158
+
+# show just the fields
+az boards work-item show --organization https://dev.azure.com/matthewburleigh --id 1158 `
+  --expand fields
+
+# open in browser
+az boards work-item show --organization https://dev.azure.com/matthewburleigh --id 1158 `
+  --open
+
+# built in help
+az boards work-item show --organization https://dev.azure.com/matthewburleigh --id 1158 `
+  --query-examples
+
+# get link to parent workitem
+az boards work-item show --org https://dev.azure.com/matthewburleigh --id 1158 `
+  --query "relations[?rel=='System.LinkTypes.Hierarchy-Reverse'].url" -o tsv
+
+# 1155 is the Epic (no parent)
+az boards work-item show --org https://dev.azure.com/matthewburleigh --id 1155 `
+   --query "relations[?rel=='System.LinkTypes.Hierarchy-Reverse'].url" -o tsv
+
+# ==> child of 1155 is 1156 (Feature)
+az boards work-item show --org https://dev.azure.com/matthewburleigh --id 1155 `
+   --query "relations[?rel=='System.LinkTypes.Hierarchy-Forward'].url" -o tsv

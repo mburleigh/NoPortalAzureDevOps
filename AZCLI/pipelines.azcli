@@ -1,0 +1,49 @@
+# https://docs.microsoft.com/en-us/cli/azure/ext/azure-devops/pipelines/build?view=azure-cli-latest#ext-azure-devops-az-pipelines-build-list
+
+# ===== BUILDS =====
+
+# build definitions
+az pipelines list --organization https://dev.azure.com/matthewburleigh --project "AZ_CLI-REST_API-PowerShell"
+
+az pipelines list --org https://dev.azure.com/matthewburleigh -p "AZ_CLI-REST_API-PowerShell" `
+  --query "[].{Name:name,Latest:latestCompletedBuild}" -o table
+
+az pipelines build definition list --org https://dev.azure.com/matthewburleigh -p "AZ_CLI-REST_API-PowerShell"
+
+az pipelines build definition list --org https://dev.azure.com/matthewburleigh -p "AZ_CLI-REST_API-PowerShell" `
+  --query "sort_by([], &name)[].{Path:path,Name:name}" -o table
+
+
+# list build pipeline runs ( add sort_by([], &buildNumber) )
+az pipelines build list --org https://dev.azure.com/matthewburleigh -p "AZ_CLI-REST_API-PowerShell" `
+  --query "sort_by([], &buildNumber)[].{Number:buildNumber,By:requestedBy.displayName}"
+  -o table
+
+# single build
+az pipelines build list --org https://dev.azure.com/matthewburleigh -p "AZ_CLI-REST_API-PowerShell" --top 1
+
+# only completed
+az pipelines build list --org https://dev.azure.com/matthewburleigh -p "AZ_CLI-REST_API-PowerShell" --status completed
+
+# sorting out buld & release durations
+az pipelines build list --org https://dev.azure.com/matthewburleigh -p "AZ_CLI-REST_API-PowerShell" --definition-ids 17 `
+  --query "[].{Number:buildNumber,Start:startTime,Finish:finishTime,Result:result,Status:status}" -o table
+
+
+# ===== RELEASES =====
+
+# release definitions
+az pipelines release definition list --org https://dev.azure.com/matthewburleigh -p "AZ_CLI-REST_API-PowerShell" `
+  --query "sort_by([], &name)[].{Name:name}" -o table
+
+
+# list releases
+az pipelines release list --org https://dev.azure.com/matthewburleigh -p "AZ_CLI-REST_API-PowerShell"
+
+az pipelines release list --org https://dev.azure.com/matthewburleigh -p "AZ_CLI-REST_API-PowerShell" `
+  --query "sort_by([], &name)[].{Name:name}" -o table
+
+# sort_by(sort_by([], &releaseDefinition.name),&name)
+az pipelines release list --org https://dev.azure.com/matthewburleigh -p "AZ_CLI-REST_API-PowerShell" `
+  --query "sort_by(sort_by([], &releaseDefinition.name),&name)[].{By:createdBy.displayName,Reason:reason,Pipeline:releaseDefinition.name,ReleaseName:name}" `
+  -o table
